@@ -1,0 +1,13 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Create School
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'proleague_school_create_urlpattern'%}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+        <button type="submit" class="button button-primary">Create School</button>
+    </form>
+{% endblock %}

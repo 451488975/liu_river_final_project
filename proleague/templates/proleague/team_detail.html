@@ -1,0 +1,79 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Team - {{ team }}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <div class="row">
+            <div class="offset-by-two eight columns">
+                <h2>{{ team }}</h2>
+                <ul class="inline">
+                {% if perms.proleague.change_team %}
+                    <li>
+                        <a href="{{ team.get_update_url }}" class="button button-primary">
+                            Edit Team
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.proleague.delete_team %}
+                    <li>
+                        <a href="{{ team.get_delete_url }}" class="button button-primary">
+                            Delete Team
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+                <section>
+                    <table>
+                        <tr>
+                            <th>Team Name:</th>
+                            <td>{{ team.team_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Acronym:</th>
+                            <td>{{ team.acronym }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tournament:</th>
+                            <td><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></td>
+                        </tr>
+                        {% if position %}
+                        <tr>
+                            <th>Position:</th>
+                            <td>{{ position }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Players</h3>
+                    <ul>
+                    {% for player in player_list %}
+                        <li>
+                            <a href="{{ player.get_absolute_url }}">{{ player }}</a>
+                        </li>
+                    {% empty %}
+                        <li><em>There are currently no players for this team.</em></li>
+                    {% endfor %}
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Matches</h3>
+                    <ul>
+                    {% for match in match_list %}
+                        <li>
+                            <a href="{{ match.get_absolute_url }}">{{ match }}</a>
+                        </li>
+                    {% empty %}
+                        <li><em>There are currently no matches for this team.</em></li>
+                    {% endfor %}
+                    </ul>
+                </section>
+            </div>
+        </div> <!-- row -->
+    </article>
+{% endblock %}

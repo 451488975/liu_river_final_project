@@ -1,0 +1,28 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Tournament List
+{% endblock %}
+
+{% block create_button %}
+    {% if perms.proleague.add_tournament %}
+        <a href="{% url 'proleague_tournament_create_urlpattern' %}" class="button button-primary">
+            Create New Tournament
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block org_content %}
+    <h2>Tournament List</h2>
+    <ul>
+    {% for tournament in tournament_list %}
+        <li>
+            <a href="{{ tournament.get_absolute_url }}">
+                {{ tournament }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>There are currently no tournaments available.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

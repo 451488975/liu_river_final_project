@@ -1,0 +1,28 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Match List
+{% endblock %}
+
+{% block create_button %}
+    {% if perms.proleague.add_match %}
+        <a href="{% url 'proleague_match_create_urlpattern' %}" class="button button-primary">
+            Create New Match
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block org_content %}
+    <h2>Match List</h2>
+    <ul>
+    {% for match in match_list %}
+        <li>
+            <a href="{{ match.get_absolute_url }}">
+                {{ match }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>There are currently no matches available.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

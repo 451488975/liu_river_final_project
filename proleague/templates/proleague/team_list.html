@@ -1,0 +1,28 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Team List
+{% endblock %}
+
+{% block create_button %}
+    {% if perms.proleague.add_team %}
+        <a href="{% url 'proleague_team_create_urlpattern' %}" class="button button-primary">
+            Create New Team
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block org_content %}
+    <h2>Team List</h2>
+    <ul>
+    {% for team in team_list %}
+        <li>
+            <a href="{{ team.get_absolute_url }}">
+                {{ team }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>There are currently no teams available.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

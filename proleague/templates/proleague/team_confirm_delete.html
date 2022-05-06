@@ -1,0 +1,19 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Delete Team
+{% endblock %}
+
+{% block content %}
+    <form action="{{ team.get_delete_url }}" method="post">
+    {% csrf_token %}
+        <p>
+            Are you sure that you want to delete
+            team {{ team }}?
+        </p>
+        <a href="{{ team.get_absolute_url }}" class="button button-primary">
+            Cancel
+        </a>
+        <button type="submit" class="button button-primary">Delete Team</button>
+    </form>
+{% endblock %}

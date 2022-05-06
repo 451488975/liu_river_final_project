@@ -1,0 +1,63 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Match - {{ match }}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <div class="row">
+            <div class="offset-by-two eight columns">
+                <h2>{{ match }}</h2>
+                <ul class="inline">
+                {% if perms.proleague.change_match %}
+                    <li>
+                        <a href="{{ match.get_update_url }}" class="button button-primary">
+                            Edit Match
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.proleague.delete_match %}
+                    <li>
+                        <a href="{{ match.get_delete_url }}" class="button button-primary">
+                            Delete Match
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+                <section>
+                    <table>
+                        <tr>
+                            <th>Match Type:</th>
+                            <td>{{ match.match_type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Match Time:</th>
+                            <td>{{ match.match_time }}</td>
+                        </tr>
+                        <tr>
+                            <th>Duration:</th>
+                            <td>{{ match.duration }}</td>
+                        </tr>
+                        <tr>
+                            <th>Team 1:</th>
+                            <td><a href="{{ team_a.get_absolute_url }}">{{ team_a }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Team 2:</th>
+                            <td><a href="{{ team_b.get_absolute_url }}">{{ team_b }}</a></td>
+                        </tr>
+                        <tr>
+                            <th><a href="{{ match.video_link }}">Video Link</a></th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Match Detail:</th>
+                            <td>{{ match.match_detail }}</td>
+                        </tr>
+                    </table>
+                </section>
+            </div>
+        </div> <!-- row -->
+    </article>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Player List
+{% endblock %}
+
+{% block create_button %}
+    {% if perms.proleague.add_player %}
+        <a href="{% url 'proleague_player_create_urlpattern' %}" class="button button-primary">
+            Create New Player
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block org_content %}
+    <h2>Player List</h2>
+    <ul>
+    {% for player in player_list %}
+        <li>
+            <a href="{{ player.get_absolute_url }}">
+                {{ player }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>There are currently no players available.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

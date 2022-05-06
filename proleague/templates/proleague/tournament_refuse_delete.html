@@ -1,0 +1,26 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Error Deleting Tournament
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting Tournament</h2>
+        <p>
+            You may not delete tournament {{ tournament }}. This
+            tournament currently has the following
+            teams:
+        </p>
+
+        <ul>
+        {% for team in teams %}
+            <li><a href="{{ team.get_absolute_url }}">{{ team }}</a></li>
+        {% endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'proleague_team_list_urlpattern' %}">Team List</a>.
+        </p>
+    </div>
+{% endblock %}

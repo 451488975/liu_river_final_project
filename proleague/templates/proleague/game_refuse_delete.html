@@ -1,0 +1,26 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Error Deleting Game
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting Game</h2>
+        <p>
+            You may not delete game {{ game }}. This
+            game currently has the following
+            tournaments:
+        </p>
+
+        <ul>
+        {% for tournament in tournaments %}
+            <li><a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a></li>
+        {% endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'proleague_game_list_urlpattern' %}">Game List</a>.
+        </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Error Deleting School
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting School</h2>
+        <p>
+            You may not delete school {{ school }}. This
+            tournament currently has the following
+            players:
+        </p>
+
+        <ul>
+        {% for player in players %}
+            <li><a href="{{ player.get_absolute_url }}">{{ player }}</a></li>
+        {% endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'proleague_school_list_urlpattern' %}">School List</a>.
+        </p>
+    </div>
+{% endblock %}

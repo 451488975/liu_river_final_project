@@ -1,0 +1,56 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Game - {{ game }}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <div class="row">
+            <div class="offset-by-two eight columns">
+                <h2>{{ game }}</h2>
+                <ul class="inline">
+                {% if perms.proleague.change_game %}
+                    <li>
+                        <a href="{{ game.get_update_url }}" class="button button-primary">
+                            Edit Game
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.proleague.delete_game %}
+                    <li>
+                        <a href="{{ game.get_delete_url }}" class="button button-primary">
+                            Delete Game
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+                <section>
+                    <table>
+                        <tr>
+                            <th>Game Name:</th>
+                            <td>{{ game.game_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Genre:</th>
+                            <td>{{ game.genre }}</td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Tournaments</h3>
+                    <ul>
+                    {% for tournament in tournament_list %}
+                        <li>
+                            <a href="{{ tournament.get_absolute_url }}">{{ tournament }}</a>
+                        </li>
+                    {% empty %}
+                        <li><em>There are currently no tournaments for this game.</em></li>
+                    {% endfor %}
+                    </ul>
+                </section>
+            </div>
+        </div> <!-- row -->
+    </article>
+{% endblock %}

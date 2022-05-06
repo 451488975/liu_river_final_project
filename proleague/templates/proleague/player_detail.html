@@ -1,0 +1,59 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Player - {{ player }}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <div class="row">
+            <div class="offset-by-two eight columns">
+                <h2>{{ player }}</h2>
+                <ul class="inline">
+                {% if perms.proleague.change_player %}
+                    <li>
+                        <a href="{{ player.get_update_url }}" class="button button-primary">
+                            Edit Player
+                        </a>
+                    </li>
+                {% endif %}
+                {% if perms.proleague.delete_player %}
+                    <li>
+                        <a href="{{ player.get_delete_url }}" class="button button-primary">
+                            Delete Player
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+                <section>
+                    <table>
+                        <tr>
+                            <th>Player Name:</th>
+                            <td>{{ player.player_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Gamer Tag:</th>
+                            <td>{{ player.gamer_tag }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ player.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone Number:</th>
+                            <td>{{ player.phone_number }}</td>
+                        </tr>
+                        <tr>
+                            <th>School:</th>
+                            <td><a href="{{ school.get_absolute_url }}">{{ school }}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Team:</th>
+                            <td><a href="{{ team.get_absolute_url }}">{{ team }}</a></td>
+                        </tr>
+                    </table>
+                </section>
+            </div>
+        </div> <!-- row -->
+    </article>
+{% endblock %}

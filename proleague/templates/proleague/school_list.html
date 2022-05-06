@@ -1,0 +1,28 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    School List
+{% endblock %}
+
+{% block create_button %}
+    {% if perms.proleague.add_school %}
+        <a href="{% url 'proleague_school_create_urlpattern' %}" class="button button-primary">
+            Create New School
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block org_content %}
+    <h2>School List</h2>
+    <ul>
+    {% for school in school_list %}
+        <li>
+            <a href="{{ school.get_absolute_url }}">
+                {{ school }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>There are currently no schools available.</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Update Player
+{% endblock %}
+
+{% block content %}
+    <form action="{{ player.get_update_url }}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+        <button type="submit" class="button button-primary">Update Player</button>
+    </form>
+{% endblock %}

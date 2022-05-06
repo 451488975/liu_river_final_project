@@ -1,0 +1,13 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Update Tournament
+{% endblock %}
+
+{% block content %}
+    <form action="{{ tournament.get_update_url }}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+        <button type="submit" class="button button-primary">Update Tournament</button>
+    </form>
+{% endblock %}
