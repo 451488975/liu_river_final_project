@@ -2,7 +2,14 @@
 
 {% block title %}Login{% endblock %}
 
-{% block content %}
+{% block create_button %}
+    Have not registered?
+    <a href="{% url 'signup_urlpattern' %}" class="button button-primary">
+        Sign Up
+    </a>
+{% endblock %}
+
+{% block org_content %}
     <h2>Login</h2>
     <form method="post">
     {% csrf_token %}
@@ -10,5 +17,8 @@
         <button type="submit" class="button button-primary">
     	    Login
         </button>
+        <a href="{% url 'password_reset_urlpattern' %}">
+            Forgot your password?
+        </a>
     </form>
 {% endblock %}

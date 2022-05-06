@@ -135,3 +135,5 @@ LOGOUT_REDIRECT_URL = 'login_urlpattern'
 LOGIN_URL = reverse_lazy('login_urlpattern')
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

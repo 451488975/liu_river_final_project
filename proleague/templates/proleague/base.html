@@ -22,11 +22,14 @@
 <body>
     <div class="container">
         <div class="status row">
-            <div class="offset-by-eight four columns">
+            <div class="offset-by-eight eight columns">
                 <ul class="inline">
                 {% if user.is_authenticated %}
                     <li>
                         Hello, {{ user.get_username }}
+                        <a href="{% url 'password_change_urlpattern' %}" class="button">
+                            Change Password
+                        </a>
                         <a href="{% url 'logout_urlpattern' %}" class="button">
                             Log Out
                         </a>

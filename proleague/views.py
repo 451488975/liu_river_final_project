@@ -1,5 +1,6 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from itertools import chain
@@ -316,3 +317,20 @@ class PlayerDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Player
     success_url = reverse_lazy('proleague_player_list_urlpattern')
     permission_required = 'proleague.delete_player'
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login_urlpattern')
+    else:
+        form = UserCreationForm()
+    return render(
+        request,
+        'proleague/signup.html',
+        {
+            'form': form
+        }
+    )
