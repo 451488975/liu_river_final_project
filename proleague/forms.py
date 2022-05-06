@@ -20,6 +20,15 @@ class GameForm(forms.ModelForm):
     def clean_game_name(self):
         return self.cleaned_data['game_name'].strip()
 
+    def clean_website(self):
+        return self.cleaned_data['website'].strip()
+
+    def clean_developer(self):
+        return self.cleaned_data['developer'].strip()
+
+    def clean_developer_website(self):
+        return self.cleaned_data['developer_website'].strip()
+
     def clean_genre(self):
         return self.cleaned_data['genre'].strip()
 

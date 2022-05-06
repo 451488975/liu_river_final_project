@@ -41,6 +41,9 @@ class Position(models.Model):
 class Game(models.Model):
     game_id = models.AutoField(primary_key=True)
     game_name = models.CharField(max_length=100)
+    website = models.CharField(max_length=255, default='')
+    developer = models.CharField(max_length=100, default='')
+    developer_website = models.CharField(max_length=255, default='')
     genre = models.CharField(max_length=45)
 
     def __str__(self):
@@ -156,7 +159,7 @@ class Match(models.Model):
     video_link = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.match_type} {self.team_a.acronym} VS. {self.team_b.acronym}'
+        return f'{self.team_a.tournament} - [{self.match_type}] {self.team_a.acronym} VS. {self.team_b.acronym}'
 
     def get_absolute_url(self):
         return reverse(
@@ -177,7 +180,7 @@ class Match(models.Model):
         )
 
     class Meta:
-        ordering = ['match_time']
+        ordering = ['team_a__tournament', 'match_time']
         constraints = [
             UniqueConstraint(fields=['match_type', 'team_a', 'team_b'], name='unique_match')
         ]

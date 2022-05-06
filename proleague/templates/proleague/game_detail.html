@@ -29,11 +29,23 @@
                     <table>
                         <tr>
                             <th>Game Name:</th>
-                            <td>{{ game.game_name }}</td>
+                            <td>
+                                <a href="{{ game.website }}" target="_blank" rel="noopener noreferrer">
+                                    {{ game.game_name }}
+                                </a>
+                            </td>
                         </tr>
                         <tr>
                             <th>Genre:</th>
                             <td>{{ game.genre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Developer:</th>
+                            <td>
+                                <a href="{{ game.developer_website }}" target="_blank" rel="noopener noreferrer">
+                                    {{ game.developer }}
+                                </a>
+                            </td>
                         </tr>
                     </table>
                 </section>

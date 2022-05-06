@@ -48,12 +48,16 @@
                             <td><a href="{{ team_b.get_absolute_url }}">{{ team_b }}</a></td>
                         </tr>
                         <tr>
-                            <th><a href="{{ match.video_link }}">Video Link</a></th>
+                            <th>
+                                <a href="{{ match.video_link }}" target="_blank" rel="noopener noreferrer">
+                                    Video Link
+                                </a>
+                            </th>
                             <td></td>
                         </tr>
                         <tr>
                             <th>Match Detail:</th>
-                            <td>{{ match.match_detail }}</td>
+                            <td><p>{{ match.match_detail|linebreaks }}</p></td>
                         </tr>
                     </table>
                 </section>
