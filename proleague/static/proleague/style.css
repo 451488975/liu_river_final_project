@@ -50,10 +50,11 @@ header h1 {
 
 .logo {
 	padding-top: 50px;
-	background-image: url("/static/courseinfo/logo.png");
+	background-image: url("/static/proleague/logo.png");
 	background-size: 50px;
 	background-repeat: no-repeat;
 	background-position: top;
+	padding-left: 20px;
 }
 
 @media (min-width: 750px) {

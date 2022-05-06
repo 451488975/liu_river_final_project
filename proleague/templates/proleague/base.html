@@ -1,171 +1,167 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>
-        {% block title %}
-            title is provided by inheriting templates
-        {% endblock %}
-        </title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css"
-              href="{% static 'proleague/normalize.css' %}">
-        <link rel="stylesheet" type="text/css"
-              href="{% static 'proleague/skeleton.css' %}">
-        <link rel="stylesheet" type="text/css"
-              href="{% static 'proleague/style.css' %}">
-        {% block head %}{% endblock %}
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>
+    {% block title %}
+        title is provided by inheriting templates
+    {% endblock %}
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'proleague/normalize.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'proleague/skeleton.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'proleague/style.css' %}">
+    {% block head %}{% endblock %}
+</head>
 
-    <body>
-        <div class="container">
-            <div class="status row">
-                <div class="offset-by-eight four columns">
-                    <ul class="inline">
-                    {% if user.is_authenticated %}
+<body>
+    <div class="container">
+        <div class="status row">
+            <div class="offset-by-eight four columns">
+                <ul class="inline">
+                {% if user.is_authenticated %}
+                    <li>
+                        Hello, {{ user.get_username }}
+                        <a href="{% url 'logout_urlpattern' %}" class="button">
+                            Log Out
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'login_urlpattern' %}" class="button">
+                            Log In
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+        </div>
+        <header class="row">
+            <div class="offset-by-one ten columns">
+                <h1 class="logo">HHO E-sports League</h1>
+                <h2>Tournament Information System</h2>
+            </div>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <a href="{% url 'proleague_game_list_urlpattern' %}">
+                        Games
+                    </a>
+                </li>
+            {% if perms.courseinfo.view_instructor %}
+            {% endif %}
+                <li>
+                    <a href="{% url 'proleague_tournament_list_urlpattern' %}">
+                        Tournaments
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'proleague_team_list_urlpattern' %}">
+                        Teams
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'proleague_match_list_urlpattern' %}">
+                        Matches
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'proleague_school_list_urlpattern' %}">
+                        Schools
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'proleague_player_list_urlpattern' %}">
+                        Players
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'about_urlpattern' %}">
+                        About
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <main>
+        {% block content %}
+            <div class="row">
+                <section class="eight columns">
+                {% block org_content %}
+                    This is default content!
+                {% endblock %}
+                </section>
+                <section class="desktop four columns">
+                {% block create_button %}{% endblock %}
+                </section>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                {% block content_footer %}{% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+        </main>
+        {% if is_paginated %}
+            <div class="row">
+                <div class="twelve columns">
+                    <ul class="pagination">
+                    {% if first_page_url %}
                         <li>
-                            <a href="{% url 'logout_urlpattern' %}">
-                                Log Out, {{ user.get_username }}
+                            <a href="{{ first_page_url }}">
+                                First
                             </a>
                         </li>
-                    {% else %}
+                    {% endif %}
+                    {% if previous_page_url %}
                         <li>
-                            <a href="{% url 'login_urlpattern' %}">
-                                Log In
+                            <a href="{{ previous_page_url }}">
+                                Previous
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        Page {{ page_obj.number }}
+                        of {{ paginator.num_pages }}
+                    </li>
+                    {% if next_page_url %}
+                        <li>
+                            <a href="{{ next_page_url }}">
+                                Next
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if last_page_url %}
+                        <li>
+                            <a href="{{ last_page_url }}">
+                                Last
                             </a>
                         </li>
                     {% endif %}
                     </ul>
                 </div>
             </div>
-            <header class="row">
-                <div class="offset-by-one ten columns">
-                    <h1 class="logo">HHO E-sports League</h1>
-                    <h2>Tournament Information System</h2>
-                </div>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="{% url 'proleague_game_list_urlpattern' %}">
-                            Games
-                        </a>
-                    </li>
-                {% if perms.courseinfo.view_instructor %}
-                {% endif %}
-                    <li>
-                        <a href="{% url 'proleague_tournament_list_urlpattern' %}">
-                            Tournaments
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'proleague_team_list_urlpattern' %}">
-                            Teams
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'proleague_match_list_urlpattern' %}">
-                            Matches
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'proleague_school_list_urlpattern' %}">
-                            Schools
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'proleague_player_list_urlpattern' %}">
-                            Players
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'about_urlpattern' %}">
-                            About
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <main>
-            {% block content %}
-                <div class="row">
-                    <section class="eight columns">
-                    {% block org_content %}
-                        This is default content!
-                    {% endblock %}
-                    </section>
-                    <section class="desktop four columns">
-                    {% block create_button %}{% endblock %}
-                    </section>
-                </div>
-                <div class="row">
-                    <div class="twelve columns">
-                    {% block content_footer %}{% endblock %}
-                    </div>
-                </div>
-            {% endblock %}
-            </main>
-            {% if is_paginated %}
-                <div class="row">
-                    <div class="twelve columns">
-                        <ul class="pagination">
-                        {% if first_page_url %}
-                            <li>
-                                <a href="{{ first_page_url }}">
-                                    First
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if previous_page_url %}
-                            <li>
-                                <a href="{{ previous_page_url }}">
-                                    Previous
-                                </a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            Page {{ page_obj.number }}
-                            of {{ paginator.num_pages }}
-                        </li>
-                        {% if next_page_url %}
-                            <li>
-                                <a href="{{ next_page_url }}">
-                                    Next
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if last_page_url %}
-                            <li>
-                                <a href="{{ last_page_url }}">
-                                    Last
-                                </a>
-                            </li>
-                        {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            {% endif %}
-        </div><!-- container -->
+        {% endif %}
+    </div><!-- container -->
 
-        <footer>
-            <p>
-                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-                    <img alt="Creative Commons License" style="border-width:0"
-                         src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"/>
-                </a><br/><span property="dct:title">EZ University Tutorial Examples and Code</span>
-                by
-                <a href="https://www.ligent.net" property="cc:attributionName"
-                   rel="cc:attributionURL">Ligent, LLC</a> are licensed under a
-                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike
-                    4.0 International License</a>.
-            </p>
-            <p>Portions of the EZ University code are based upon code from
-                <a href="https://django-unleashed.com">Django Unleashed</a>,
-                <a href="http://getskeleton.com/">Skeleton</a>, and
-                <a href="https://necolas.github.io/normalize.css/">Normalize.css</a> and
-                are subject to the intellectual property rights restrictions of those works.
-            </p>
-        </footer>
-    </body>
+    <footer>
+        <p>
+            <span property="dct:title">HHO E-sports League Tournament Information System Code</span>
+            by River Liu.
+        </p>
+        <p>Portions of the code are based upon code from
+            <a href="https://django-unleashed.com">Django Unleashed</a>,
+            <a href="http://getskeleton.com/">Skeleton</a>, and
+            <a href="https://necolas.github.io/normalize.css/">Normalize.css</a>, and
+            <a href="https://courseinfo.ligent.net/2022sp/_illinois/is439_oag_oau/index.html">IS 439 Course</a>
+            in University of Illinois at Urbana-Champaign and
+            are subject to the intellectual property rights restrictions of those works.
+        </p>
+    </footer>
+</body>
 </html>
