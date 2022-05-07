@@ -49,10 +49,47 @@
                 <section>
                     <h3>Teams</h3>
                     <ul>
+                        <h5>1st Place</h5>
+                        {% for team in team_list %}
+                            {% if team.position.position_sequence == 1 %}
+                                <li>
+                                    <a href="{{ team.get_absolute_url }}">{{ team }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <h5>2nd Place</h5>
+                        {% for team in team_list %}
+                            {% if team.position.position_sequence == 2 %}
+                                <li>
+                                    <a href="{{ team.get_absolute_url }}">{{ team }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <h5>3rd - 4th Place</h5>
+                        {% for team in team_list %}
+                            {% if team.position.position_sequence == 3 %}
+                                <li>
+                                    <a href="{{ team.get_absolute_url }}">{{ team }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <h5>5th - 8th Place</h5>
+                        {% for team in team_list %}
+                            {% if team.position.position_sequence == 4 %}
+                                <li>
+                                    <a href="{{ team.get_absolute_url }}">{{ team }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <h5>9th - 16th Place</h5>
+                        {% for team in team_list %}
+                            {% if team.position.position_sequence == 5 %}
+                                <li>
+                                    <a href="{{ team.get_absolute_url }}">{{ team }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
                     {% for team in team_list %}
-                        <li>
-                            <a href="{{ team.get_absolute_url }}">{{ team }}</a>
-                        </li>
                     {% empty %}
                         <li><em>There are currently no teams for this tournament.</em></li>
                     {% endfor %}

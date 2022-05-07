@@ -1,0 +1,20 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Match Search Result
+{% endblock %}
+
+{% block org_content %}
+    <h2>Match Search Result - {{ kwd }}</h2>
+    <ul>
+    {% for match in match_list %}
+        <li>
+            <a href="{{ match.get_absolute_url }}">
+                {{ match }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>Nothing Found!</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

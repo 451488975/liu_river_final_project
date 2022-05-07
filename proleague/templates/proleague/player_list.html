@@ -14,6 +14,10 @@
 
 {% block org_content %}
     <h2>Player List</h2>
+    <form action="{% url 'proleague_player_search_urlpattern' %}" method='get'>
+        <input type='text' name='player_search'>
+        <button type='submit'>Search</button>
+    </form>
     <ul>
     {% for player in player_list %}
         <li>

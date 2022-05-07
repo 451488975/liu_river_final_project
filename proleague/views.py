@@ -1,8 +1,14 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import Group
+from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
+from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views import View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from itertools import chain
 
 from .utils import PageLinksMixin
@@ -10,12 +16,14 @@ from .forms import TournamentForm, MatchForm, PlayerForm, TeamForm, GameForm, Sc
 from .models import Tournament, Match, Player, Team, Game, School
 
 
-class TournamentList(ListView):
+class TournamentList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Tournament
+    permission_required = 'proleague.view_tournament'
 
 
-class TournamentDetail(DetailView):
+class TournamentDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Tournament
+    permission_required = 'proleague.view_tournament'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -65,13 +73,15 @@ class TournamentDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
             )
 
 
-class MatchList(PageLinksMixin, ListView):
+class MatchList(LoginRequiredMixin, PermissionRequiredMixin, PageLinksMixin, ListView):
     paginate_by = 25
     model = Match
+    permission_required = 'proleague.view_match'
 
 
-class MatchDetail(DetailView):
+class MatchDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Match
+    permission_required = 'proleague.view_match'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -97,17 +107,75 @@ class MatchUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 
 class MatchDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    model = Tournament
+    model = Match
     success_url = reverse_lazy('proleague_match_list_urlpattern')
     permission_required = 'proleague.delete_match'
 
 
-class GameList(ListView):
-    model = Game
+class MatchSearch(LoginRequiredMixin, PermissionRequiredMixin, View):
+    page_kwarg = 'page'
+    paginate_by = 25
+    template_name = 'proleague/match_search_result.html'
+    permission_required = 'proleague.view_match'
+
+    def get(self, request):
+        keyword = request.GET.get('match_search')
+        match_list = Match.objects.filter(
+            Q(match_type__icontains=keyword) |
+            Q(team_a__team_name__icontains=keyword) |
+            Q(team_b__team_name__icontains=keyword) |
+            Q(team_a__tournament__tournament_name__icontains=keyword)
+        )
+        paginator = Paginator(
+            match_list,
+            self.paginate_by
+        )
+        page_number = request.GET.get(
+            self.page_kwarg
+        )
+        try:
+            page = paginator.page(page_number)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        if page.has_previous():
+            prev_url = "?match_search={kwd}&{pkw}={n}".format(
+                kwd=keyword,
+                pkw=self.page_kwarg,
+                n=page.previous_page_number()
+            )
+        else:
+            prev_url = None
+        if page.has_next():
+            next_url = "?match_search={kwd}&{pkw}={n}".format(
+                kwd=keyword,
+                pkw=self.page_kwarg,
+                n=page.next_page_number()
+            )
+        else:
+            next_url = None
+        context = {
+            'is_paginated': page.has_other_pages(),
+            'next_page_url': next_url,
+            'paginator': paginator,
+            'previous_page_url': prev_url,
+            'match_list': page,
+            'kwd': keyword
+        }
+        return render(
+            request, self.template_name, context
+        )
 
 
-class GameDetail(DetailView):
+class GameList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Game
+    permission_required = 'proleague.view_game'
+
+
+class GameDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Game
+    permission_required = 'proleague.view_game'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -155,13 +223,15 @@ class GameDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
             )
 
 
-class TeamList(PageLinksMixin, ListView):
+class TeamList(LoginRequiredMixin, PermissionRequiredMixin, PageLinksMixin, ListView):
     paginate_by = 25
     model = Team
+    permission_required = 'proleague.view_team'
 
 
-class TeamDetail(DetailView):
+class TeamDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Team
+    permission_required = 'proleague.view_team'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -229,12 +299,68 @@ class TeamDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
             )
 
 
-class SchoolList(ListView):
-    model = School
+class TeamSearch(LoginRequiredMixin, PermissionRequiredMixin, View):
+    page_kwarg = 'page'
+    paginate_by = 25
+    template_name = 'proleague/team_search_result.html'
+    permission_required = 'proleague.view_team'
+
+    def get(self, request):
+        keyword = request.GET.get('team_search')
+        team_list = Team.objects.filter(
+            Q(team_name__icontains=keyword) |
+            Q(acronym__icontains=keyword)
+        ).distinct()
+        paginator = Paginator(
+            team_list,
+            self.paginate_by
+        )
+        page_number = request.GET.get(
+            self.page_kwarg
+        )
+        try:
+            page = paginator.page(page_number)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        if page.has_previous():
+            prev_url = "?team_search={kwd}&{pkw}={n}".format(
+                kwd=keyword,
+                pkw=self.page_kwarg,
+                n=page.previous_page_number()
+            )
+        else:
+            prev_url = None
+        if page.has_next():
+            next_url = "?team_search={kwd}&{pkw}={n}".format(
+                kwd=keyword,
+                pkw=self.page_kwarg,
+                n=page.next_page_number()
+            )
+        else:
+            next_url = None
+        context = {
+            'is_paginated': page.has_other_pages(),
+            'next_page_url': next_url,
+            'paginator': paginator,
+            'previous_page_url': prev_url,
+            'team_list': page,
+            'kwd': keyword
+        }
+        return render(
+            request, self.template_name, context
+        )
 
 
-class SchoolDetail(DetailView):
+class SchoolList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = School
+    permission_required = 'proleague.view_team'
+
+
+class SchoolDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = School
+    permission_required = 'proleague.view_team'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -282,13 +408,15 @@ class SchoolDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
             )
 
 
-class PlayerList(PageLinksMixin, ListView):
+class PlayerList(LoginRequiredMixin, PermissionRequiredMixin, PageLinksMixin, ListView):
     paginate_by = 25
     model = Player
+    permission_required = 'proleague.view_player'
 
 
-class PlayerDetail(DetailView):
+class PlayerDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Player
+    permission_required = 'proleague.view_player'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -319,18 +447,93 @@ class PlayerDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'proleague.delete_player'
 
 
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login_urlpattern')
-    else:
-        form = UserCreationForm()
-    return render(
-        request,
-        'proleague/signup.html',
-        {
-            'form': form
+class PlayerSearch(LoginRequiredMixin, PermissionRequiredMixin, View):
+    page_kwarg = 'page'
+    paginate_by = 25
+    template_name = 'proleague/player_search_result.html'
+    permission_required = 'proleague.view_player'
+
+    def get(self, request):
+        keyword = request.GET.get('player_search')
+        player_list = Player.objects.filter(
+            Q(player_name__icontains=keyword) |
+            Q(gamer_tag__icontains=keyword)
+        ).distinct()
+        paginator = Paginator(
+            player_list,
+            self.paginate_by
+        )
+        page_number = request.GET.get(
+            self.page_kwarg
+        )
+        try:
+            page = paginator.page(page_number)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        if page.has_previous():
+            prev_url = "?player_search={kwd}&{pkw}={n}".format(
+                kwd=keyword,
+                pkw=self.page_kwarg,
+                n=page.previous_page_number()
+            )
+        else:
+            prev_url = None
+        if page.has_next():
+            next_url = "?player_search={kwd}&{pkw}={n}".format(
+                kwd=keyword,
+                pkw=self.page_kwarg,
+                n=page.next_page_number()
+            )
+        else:
+            next_url = None
+        context = {
+            'is_paginated': page.has_other_pages(),
+            'next_page_url': next_url,
+            'paginator': paginator,
+            'previous_page_url': prev_url,
+            'player_list': page,
+            'kwd': keyword
         }
-    )
+        return render(
+            request, self.template_name, context
+        )
+
+
+class SignUp(FormView):
+    template_name = 'proleague/signup.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('about_urlpattern')
+
+    def form_valid(self, form):
+        # save the new user first
+        form.save()
+        # get the username and password
+        username = self.request.POST['username']
+        password = self.request.POST['password1']
+        # authenticate user then login
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        group = Group.objects.get(name='pl_user')
+        user.groups.add(group)
+        return HttpResponseRedirect(self.get_success_url())
+#
+#
+# def signup(request):
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             group = Group.objects.get(name='pl_user')
+#
+#             return redirect('login_urlpattern')
+#     else:
+#         form = UserCreationForm()
+#     return render(
+#         request,
+#         'proleague/signup.html',
+#         {
+#             'form': form
+#         }
+#     )

@@ -121,7 +121,7 @@ class Team(models.Model):
     )
 
     def __str__(self):
-        return f'{self.team_name}({self.acronym})'
+        return f'{self.team_name} ({self.acronym})'
 
     def get_absolute_url(self):
         return reverse(
@@ -230,7 +230,7 @@ class Player(models.Model):
     team = models.ForeignKey(Team, related_name='players', on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'{self.player_name}({self.gamer_tag})'
+        return f'{self.player_name} ({self.gamer_tag})'
 
     def get_absolute_url(self):
         return reverse(

@@ -1,0 +1,20 @@
+{% extends 'proleague/base.html' %}
+
+{% block title %}
+    Player Search Result
+{% endblock %}
+
+{% block org_content %}
+    <h2>Player Search Result - {{ kwd }}</h2>
+    <ul>
+    {% for player in player_list %}
+        <li>
+            <a href="{{ player.get_absolute_url }}">
+                {{ player }}
+            </a>
+        </li>
+    {% empty %}
+        <li><em>Nothing Found!</em></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

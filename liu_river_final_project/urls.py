@@ -5,7 +5,7 @@ from django.contrib.auth.views import (
 )
 from django.urls import path, include, reverse_lazy
 from django.views.generic import RedirectView, TemplateView
-from proleague.views import signup
+from proleague.views import SignUp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +28,7 @@ urlpatterns = [
 
     path(
         'signup/',
-        signup,
+        SignUp.as_view(),
         name='signup_urlpattern'
     ),
 

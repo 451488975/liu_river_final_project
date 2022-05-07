@@ -3,9 +3,9 @@ from django.urls import path
 from .views import (
     TournamentList, TournamentCreate, TournamentDelete, TournamentDetail, TournamentUpdate,
     GameList, GameCreate, GameDelete, GameDetail, GameUpdate,
-    PlayerList, PlayerCreate, PlayerDelete, PlayerDetail, PlayerUpdate,
-    MatchList, MatchCreate, MatchDelete, MatchDetail, MatchUpdate,
-    TeamList, TeamCreate, TeamDelete, TeamDetail, TeamUpdate,
+    PlayerList, PlayerCreate, PlayerDelete, PlayerDetail, PlayerUpdate, PlayerSearch,
+    MatchList, MatchCreate, MatchDelete, MatchDetail, MatchUpdate, MatchSearch,
+    TeamList, TeamCreate, TeamDelete, TeamDetail, TeamUpdate, TeamSearch,
     SchoolList, SchoolCreate, SchoolDelete, SchoolDetail, SchoolUpdate
 )
 
@@ -102,6 +102,12 @@ urlpatterns = [
     ),
 
     path(
+        'player/search/',
+        PlayerSearch.as_view(),
+        name='proleague_player_search_urlpattern'
+    ),
+
+    path(
         'match/',
         MatchList.as_view(),
         name='proleague_match_list_urlpattern'
@@ -132,6 +138,12 @@ urlpatterns = [
     ),
 
     path(
+        'match/search/',
+        MatchSearch.as_view(),
+        name='proleague_match_search_urlpattern'
+    ),
+
+    path(
         'team/',
         TeamList.as_view(),
         name='proleague_team_list_urlpattern'
@@ -159,6 +171,12 @@ urlpatterns = [
         'team/<int:pk>/delete/',
         TeamDelete.as_view(),
         name='proleague_team_delete_urlpattern'
+    ),
+
+    path(
+        'team/search/',
+        TeamSearch.as_view(),
+        name='proleague_team_search_urlpattern'
     ),
 
     path(

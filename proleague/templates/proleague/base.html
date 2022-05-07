@@ -52,38 +52,48 @@
         </header>
         <nav>
             <ul>
+            {% if perms.proleague.view_game %}
                 <li>
                     <a href="{% url 'proleague_game_list_urlpattern' %}">
                         Games
                     </a>
                 </li>
-            {% if perms.courseinfo.view_instructor %}
             {% endif %}
+            {% if perms.proleague.view_tournament %}
                 <li>
                     <a href="{% url 'proleague_tournament_list_urlpattern' %}">
                         Tournaments
                     </a>
                 </li>
+            {% endif %}
+            {% if perms.proleague.view_team %}
                 <li>
                     <a href="{% url 'proleague_team_list_urlpattern' %}">
                         Teams
                     </a>
                 </li>
+            {% endif %}
+            {% if perms.proleague.view_match %}
                 <li>
                     <a href="{% url 'proleague_match_list_urlpattern' %}">
                         Matches
                     </a>
                 </li>
+            {% endif %}
+            {% if perms.proleague.view_school %}
                 <li>
                     <a href="{% url 'proleague_school_list_urlpattern' %}">
                         Schools
                     </a>
                 </li>
+            {% endif %}
+            {% if perms.proleague.view_player %}
                 <li>
                     <a href="{% url 'proleague_player_list_urlpattern' %}">
                         Players
                     </a>
                 </li>
+            {% endif %}
                 <li>
                     <a href="{% url 'about_urlpattern' %}">
                         About
